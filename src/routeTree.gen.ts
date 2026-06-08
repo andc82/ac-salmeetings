@@ -9,38 +9,125 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedNewMeetingRouteImport } from './routes/_authenticated/new-meeting'
+import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
+import { Route as AuthenticatedMeetingsIdRouteImport } from './routes/_authenticated/meetings.$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNewMeetingRoute = AuthenticatedNewMeetingRouteImport.update({
+  id: '/new-meeting',
+  path: '/new-meeting',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMeetingsRoute = AuthenticatedMeetingsRouteImport.update({
+  id: '/meetings',
+  path: '/meetings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMeetingsIdRoute = AuthenticatedMeetingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedMeetingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/meetings': typeof AuthenticatedMeetingsRouteWithChildren
+  '/new-meeting': typeof AuthenticatedNewMeetingRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/meetings/$id': typeof AuthenticatedMeetingsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/meetings': typeof AuthenticatedMeetingsRouteWithChildren
+  '/new-meeting': typeof AuthenticatedNewMeetingRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/meetings/$id': typeof AuthenticatedMeetingsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/meetings': typeof AuthenticatedMeetingsRouteWithChildren
+  '/_authenticated/new-meeting': typeof AuthenticatedNewMeetingRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/meetings/$id': typeof AuthenticatedMeetingsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/meetings'
+    | '/new-meeting'
+    | '/settings'
+    | '/meetings/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/meetings'
+    | '/new-meeting'
+    | '/settings'
+    | '/meetings/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/meetings'
+    | '/_authenticated/new-meeting'
+    | '/_authenticated/settings'
+    | '/_authenticated/meetings/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +135,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/new-meeting': {
+      id: '/_authenticated/new-meeting'
+      path: '/new-meeting'
+      fullPath: '/new-meeting'
+      preLoaderRoute: typeof AuthenticatedNewMeetingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/meetings': {
+      id: '/_authenticated/meetings'
+      path: '/meetings'
+      fullPath: '/meetings'
+      preLoaderRoute: typeof AuthenticatedMeetingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/meetings/$id': {
+      id: '/_authenticated/meetings/$id'
+      path: '/$id'
+      fullPath: '/meetings/$id'
+      preLoaderRoute: typeof AuthenticatedMeetingsIdRouteImport
+      parentRoute: typeof AuthenticatedMeetingsRoute
+    }
   }
 }
 
+interface AuthenticatedMeetingsRouteChildren {
+  AuthenticatedMeetingsIdRoute: typeof AuthenticatedMeetingsIdRoute
+}
+
+const AuthenticatedMeetingsRouteChildren: AuthenticatedMeetingsRouteChildren = {
+  AuthenticatedMeetingsIdRoute: AuthenticatedMeetingsIdRoute,
+}
+
+const AuthenticatedMeetingsRouteWithChildren =
+  AuthenticatedMeetingsRoute._addFileChildren(
+    AuthenticatedMeetingsRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedMeetingsRoute: typeof AuthenticatedMeetingsRouteWithChildren
+  AuthenticatedNewMeetingRoute: typeof AuthenticatedNewMeetingRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedMeetingsRoute: AuthenticatedMeetingsRouteWithChildren,
+  AuthenticatedNewMeetingRoute: AuthenticatedNewMeetingRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -1,6 +1,7 @@
 export async function downloadMinutePdf(opts: { title: string; html: string; supplier?: string; createdAt?: string }) {
   const { default: html2pdf } = await import("html2pdf.js");
   const el = document.createElement("div");
+  el.className = "__pdf-root";
   el.style.cssText = "position:fixed;left:-10000px;top:0;width:780px;background:#ffffff;color:#111111;font-family:Inter,Arial,sans-serif;padding:24px;";
   el.innerHTML = `
     <div style="border-bottom:2px solid #e5e7eb;margin-bottom:16px;padding-bottom:12px;color:#111;">

@@ -2,11 +2,13 @@ import { toast } from "sonner";
 
 export async function downloadMinutePdf(opts: { title: string; html: string; supplier?: string; createdAt?: string }) {
   try {
-    const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+    const [{ default: jsPDF }, { default: html2canvas }, { default: DOMPurify }] = await Promise.all([
       import("jspdf"),
       import("html2canvas-pro"),
+      import("dompurify"),
     ]);
 
+    const safeHtml = DOMPurify.sanitize(opts.html || "");
     const el = document.createElement("div");
     el.style.cssText =
       "position:fixed;left:-10000px;top:0;width:780px;background:#ffffff;color:#111111;font-family:Inter,Arial,sans-serif;padding:32px;line-height:1.55;";
@@ -19,7 +21,7 @@ export async function downloadMinutePdf(opts: { title: string; html: string; sup
           ${opts.createdAt ? ` &nbsp;·&nbsp; ${escapeHtml(opts.createdAt)}` : ""}
         </div>
       </div>
-      <div style="color:#111;">${opts.html || ""}</div>
+      <div style="color:#111;">${safeHtml}</div>
     `;
     document.body.appendChild(el);
 

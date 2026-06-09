@@ -27,7 +27,7 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
       Underline,
       TextStyle,
       Color,
-      Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener", target: "_blank" } }),
+      Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener", target: "_blank" }, validate: (href) => /^https?:\/\//i.test(href) }),
     ],
     content: value || "<p></p>",
     editable,

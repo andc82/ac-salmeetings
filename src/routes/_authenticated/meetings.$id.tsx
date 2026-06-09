@@ -9,6 +9,7 @@ import { RichTextEditor } from "@/components/RichTextEditor";
 import { ArrowLeft, Download, Save, Pencil } from "lucide-react";
 import { downloadMinutePdf } from "@/lib/pdf";
 import { toast } from "sonner";
+import DOMPurify from "dompurify";
 
 const search = z.object({ mode: z.enum(["view", "edit"]).optional().default("view") });
 
@@ -91,7 +92,7 @@ function MeetingDetail() {
         <RichTextEditor value={content} onChange={setContent} />
       ) : (
         <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <div className="tiptap-editor"><div className="ProseMirror" dangerouslySetInnerHTML={{ __html: content || "<p><em>Vuota</em></p>" }} /></div>
+          <div className="tiptap-editor"><div className="ProseMirror" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content || "<p><em>Vuota</em></p>") }} /></div>
         </div>
       )}
     </div>

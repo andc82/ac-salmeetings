@@ -84,7 +84,7 @@ function NewMeeting() {
             {suppliers.length === 0 ? (
               <p className="text-sm text-muted-foreground">Nessun fornitore. <Link to="/settings" className="text-primary underline">Aggiungine uno</Link>.</p>
             ) : (
-              <Select value={supplierId} onValueChange={setSupplierId}>
+              <Select value={supplierId} onValueChange={(v) => { setSupplierId(v); setBaseMeetingId("none"); }}>
                 <SelectTrigger><SelectValue placeholder="Seleziona un fornitore" /></SelectTrigger>
                 <SelectContent>
                   {suppliers.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
@@ -92,13 +92,37 @@ function NewMeeting() {
               </Select>
             )}
           </div>
+          {supplierId && (
+            <div className="space-y-2">
+              <Label>Parti da una minuta esistente <span className="text-muted-foreground font-normal">(opzionale)</span></Label>
+              <Select value={baseMeetingId} onValueChange={setBaseMeetingId} disabled={existingMeetingsQ.isLoading}>
+                <SelectTrigger>
+                  <SelectValue placeholder={existingMeetingsQ.isLoading ? "Caricamento..." : "Nessuna — parti da vuoto"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nessuna — parti da vuoto</SelectItem>
+                  {(existingMeetingsQ.data ?? []).map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="title">Titolo</Label>
             <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Es. SAL settimanale 24/06" />
           </div>
           <div className="flex justify-end">
-            <Button disabled={!supplierId || !title.trim()} onClick={() => setStarted(true)}>Procedi</Button>
+            <Button
+              disabled={!supplierId || !title.trim()}
+              onClick={() => {
+                const base = (existingMeetingsQ.data ?? []).find((m) => m.id === baseMeetingId);
+                setContent(base?.content || "<p></p>");
+                setStarted(true);
+              }}
+            >Procedi</Button>
           </div>
+
         </Card>
       </div>
     );

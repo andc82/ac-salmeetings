@@ -24,6 +24,7 @@ function NewMeeting() {
   const [title, setTitle] = useState("");
   const [started, setStarted] = useState(false);
   const [content, setContent] = useState("<p></p>");
+  const [baseMeetingId, setBaseMeetingId] = useState<string>("none");
 
   const suppliersQ = useQuery({
     queryKey: ["suppliers"],
@@ -33,6 +34,21 @@ function NewMeeting() {
       return data;
     },
   });
+
+  const existingMeetingsQ = useQuery({
+    queryKey: ["meetings", supplierId],
+    enabled: !!supplierId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("sal_meetings")
+        .select("id,title,content,updated_at")
+        .eq("supplier_id", supplierId)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
 
   const create = useMutation({
     mutationFn: async () => {

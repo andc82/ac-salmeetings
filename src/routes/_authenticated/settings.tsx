@@ -175,18 +175,18 @@ function SuppliersTab() {
               {editingId === s.id ? (
                 <>
                   <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="flex-1" />
-                  <Button size="icon" variant="ghost" onClick={() => update.mutate()}><Check className="h-4 w-4" /></Button>
-                  <Button size="icon" variant="ghost" onClick={() => setEditingId(null)}><X className="h-4 w-4" /></Button>
+                  <Button size="icon" variant="ghost" aria-label="Conferma modifica" onClick={() => update.mutate()}><Check className="h-4 w-4" /></Button>
+                  <Button size="icon" variant="ghost" aria-label="Annulla modifica" onClick={() => setEditingId(null)}><X className="h-4 w-4" /></Button>
                 </>
               ) : (
                 <>
                   <span className="flex-1 font-medium">{s.name}</span>
-                  <Button size="icon" variant="ghost" onClick={() => { setEditingId(s.id); setEditName(s.name); }}>
+                  <Button size="icon" variant="ghost" aria-label={`Modifica ${s.name}`} onClick={() => { setEditingId(s.id); setEditName(s.name); }}>
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button size="icon" variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                      <Button size="icon" variant="ghost" aria-label={`Elimina ${s.name}`} className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>

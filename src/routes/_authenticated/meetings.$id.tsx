@@ -61,7 +61,7 @@ function MeetingDetail() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <Button variant="ghost" size="icon" onClick={() => navigate({ to: "/meetings" })}><ArrowLeft className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" aria-label="Torna alle minute" onClick={() => navigate({ to: "/meetings" })}><ArrowLeft className="h-4 w-4" /></Button>
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-widest text-muted-foreground truncate">{supplierName ?? ""}</p>
             {editable ? (

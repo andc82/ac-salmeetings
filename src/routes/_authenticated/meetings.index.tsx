@@ -100,18 +100,18 @@ function MeetingsPage() {
                     <td className="px-5 py-3 text-muted-foreground">{fmtDate(m.updated_at)}</td>
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" title="Visualizza" onClick={() => navigate({ to: "/meetings/$id", params: { id: m.id }, search: { mode: "view" } })}>
+                        <Button variant="ghost" size="icon" aria-label={`Visualizza ${m.title}`} title="Visualizza" onClick={() => navigate({ to: "/meetings/$id", params: { id: m.id }, search: { mode: "view" } })}>
                           <FileText className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" title="Modifica" onClick={() => navigate({ to: "/meetings/$id", params: { id: m.id }, search: { mode: "edit" } })}>
+                        <Button variant="ghost" size="icon" aria-label={`Modifica ${m.title}`} title="Modifica" onClick={() => navigate({ to: "/meetings/$id", params: { id: m.id }, search: { mode: "edit" } })}>
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" title="Scarica PDF" onClick={() => downloadMinutePdf({ title: m.title, html: m.content, supplier: supplier?.name, createdAt: fmtDate(m.created_at) })}>
+                        <Button variant="ghost" size="icon" aria-label={`Scarica PDF ${m.title}`} title="Scarica PDF" onClick={() => downloadMinutePdf({ title: m.title, html: m.content, supplier: supplier?.name, createdAt: fmtDate(m.created_at) })}>
                           <Download className="h-4 w-4" />
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" title="Elimina" className="text-destructive hover:text-destructive">
+                            <Button variant="ghost" size="icon" aria-label={`Elimina ${m.title}`} title="Elimina" className="text-destructive hover:text-destructive">
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </AlertDialogTrigger>

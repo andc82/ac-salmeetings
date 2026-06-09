@@ -19,32 +19,56 @@ export async function downloadMinutePdf(opts: { title: string; html: string; sup
           ${opts.createdAt ? ` &nbsp;·&nbsp; ${escapeHtml(opts.createdAt)}` : ""}
         </div>
       </div>
-      <div class="minute-render-body" style="color:#111;">${opts.html || ""}</div>
+      <div style="color:#111;">${opts.html || ""}</div>
     `;
     document.body.appendChild(el);
 
     try {
-      const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false });
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const fullCanvas = await html2canvas(el, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+        logging: false,
+      });
 
       const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
       const pageW = pdf.internal.pageSize.getWidth();
       const pageH = pdf.internal.pageSize.getHeight();
       const margin = 12;
-      const imgW = pageW - margin * 2;
-      const imgH = (canvas.height * imgW) / canvas.width;
+      const contentW = pageW - margin * 2;
+      const contentH = pageH - margin * 2;
 
-      let heightLeft = imgH;
-      let position = margin;
+      // px-per-mm based on the rendered canvas width mapped to PDF content width
+      const pxPerMm = fullCanvas.width / contentW;
+      const pageSlicePx = Math.floor(contentH * pxPerMm);
 
-      pdf.addImage(imgData, "JPEG", margin, position, imgW, imgH);
-      heightLeft -= pageH - margin * 2;
+      let renderedPx = 0;
+      let pageIndex = 0;
 
-      while (heightLeft > 0) {
-        position = margin - (imgH - heightLeft);
-        pdf.addPage();
-        pdf.addImage(imgData, "JPEG", margin, position, imgW, imgH);
-        heightLeft -= pageH - margin * 2;
+      while (renderedPx < fullCanvas.height) {
+        const remainingPx = fullCanvas.height - renderedPx;
+        const slicePx = Math.min(pageSlicePx, remainingPx);
+
+        const slice = document.createElement("canvas");
+        slice.width = fullCanvas.width;
+        slice.height = slicePx;
+        const ctx = slice.getContext("2d")!;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, slice.width, slice.height);
+        ctx.drawImage(
+          fullCanvas,
+          0, renderedPx, fullCanvas.width, slicePx,
+          0, 0, fullCanvas.width, slicePx,
+        );
+
+        const imgData = slice.toDataURL("image/jpeg", 0.95);
+        const sliceHeightMm = slicePx / pxPerMm;
+
+        if (pageIndex > 0) pdf.addPage();
+        pdf.addImage(imgData, "JPEG", margin, margin, contentW, sliceHeightMm);
+
+        renderedPx += slicePx;
+        pageIndex += 1;
       }
 
       const filename = `${(opts.title || "minuta").replace(/[^a-z0-9-_ ]/gi, "_")}.pdf`;

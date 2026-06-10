@@ -50,6 +50,7 @@ function ProfileTab() {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
@@ -57,6 +58,7 @@ function ProfileTab() {
     if (profileQ.data) {
       setFirstName(profileQ.data.first_name);
       setLastName(profileQ.data.last_name);
+      setUsername((profileQ.data as any).username ?? "");
     }
   }, [profileQ.data]);
 
@@ -64,7 +66,7 @@ function ProfileTab() {
     mutationFn: async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("noauth");
-      const { error } = await supabase.from("profiles").update({ first_name: firstName, last_name: lastName }).eq("id", u.user.id);
+      const { error } = await supabase.from("profiles").update({ first_name: firstName, last_name: lastName, username }).eq("id", u.user.id);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Profilo aggiornato"); queryClient.invalidateQueries({ queryKey: ["profile"] }); },

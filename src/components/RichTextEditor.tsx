@@ -38,7 +38,7 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
   if (!editor) return null;
 
   return (
-    <div className="tiptap-editor rounded-xl border border-border bg-card overflow-hidden">
+    <div className="tiptap-editor rounded-xl border border-border bg-card">
       {editable && <Toolbar editor={editor} />}
       <EditorContent editor={editor} />
     </div>
@@ -63,7 +63,7 @@ function Toolbar({ editor }: { editor: Editor }) {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-border bg-background/40 px-2 py-1.5">
+    <div className="sticky top-0 z-20 flex flex-wrap items-center gap-1 border-b border-border bg-card/95 backdrop-blur px-2 py-1.5">
       <Btn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title="Bold"><Bold className="h-4 w-4" /></Btn>
       <Btn onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic"><Italic className="h-4 w-4" /></Btn>
       <Btn onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline"><UnderlineIcon className="h-4 w-4" /></Btn>

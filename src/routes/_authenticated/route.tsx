@@ -34,37 +34,39 @@ function AuthLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link to="/meetings" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 ring-1 ring-primary/30 grid place-items-center">
-              <span className="font-display text-sm font-semibold text-primary">AC</span>
-            </div>
-            <span className="font-display text-sm font-semibold tracking-tight">SAL Meetings</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-1">
-            {nav.map(({ to, label, icon: Icon }) => {
-              const active = pathname.startsWith(to);
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  className={`inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
-                    active ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
-          <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-muted-foreground hover:text-foreground">
-            <LogOut className="h-4 w-4 mr-2" />
-            Esci
-          </Button>
+      <header className="border-b border-border">
+        <div className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border md:border-b-0">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+            <Link to="/meetings" className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-lg bg-primary/10 ring-1 ring-primary/30 grid place-items-center">
+                <span className="font-display text-sm font-semibold text-primary">AC</span>
+              </div>
+              <span className="font-display text-sm font-semibold tracking-tight">SAL Meetings</span>
+            </Link>
+            <nav className="hidden md:flex items-center gap-1">
+              {nav.map(({ to, label, icon: Icon }) => {
+                const active = pathname.startsWith(to);
+                return (
+                  <Link
+                    key={to}
+                    to={to}
+                    className={`inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
+                      active ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </Link>
+                );
+              })}
+            </nav>
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-muted-foreground hover:text-foreground">
+              <LogOut className="h-4 w-4 mr-2" />
+              Esci
+            </Button>
+          </div>
         </div>
-        <nav className="md:hidden flex items-center gap-1 px-6 pb-3 overflow-x-auto">
+        <nav className="md:hidden flex items-center gap-1 px-6 pb-3 pt-3 overflow-x-auto">
           {nav.map(({ to, label, icon: Icon }) => {
             const active = pathname.startsWith(to);
             return (

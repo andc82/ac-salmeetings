@@ -38,7 +38,7 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
   if (!editor) return null;
 
   return (
-    <div className="tiptap-editor rounded-xl border border-border bg-card overflow-hidden">
+    <div className="tiptap-editor rounded-xl border border-border bg-card">
       {editable && <Toolbar editor={editor} />}
       <EditorContent editor={editor} />
     </div>

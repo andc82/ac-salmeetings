@@ -50,6 +50,7 @@ function ProfileTab() {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
@@ -57,6 +58,7 @@ function ProfileTab() {
     if (profileQ.data) {
       setFirstName(profileQ.data.first_name);
       setLastName(profileQ.data.last_name);
+      setUsername((profileQ.data as any).username ?? "");
     }
   }, [profileQ.data]);
 
@@ -64,7 +66,7 @@ function ProfileTab() {
     mutationFn: async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("noauth");
-      const { error } = await supabase.from("profiles").update({ first_name: firstName, last_name: lastName }).eq("id", u.user.id);
+      const { error } = await supabase.from("profiles").update({ first_name: firstName, last_name: lastName, username }).eq("id", u.user.id);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Profilo aggiornato"); queryClient.invalidateQueries({ queryKey: ["profile"] }); },
@@ -88,9 +90,9 @@ function ProfileTab() {
     <div className="grid md:grid-cols-2 gap-6">
       <Card className="p-6">
         <h2 className="text-lg font-semibold mb-1">Dati personali</h2>
-        <p className="text-sm text-muted-foreground mb-5">L'email (username) non è modificabile.</p>
+        <p className="text-sm text-muted-foreground mb-5">Aggiorna i tuoi dati personali.</p>
         <div className="space-y-4">
-          <div className="space-y-2"><Label>Email</Label><Input value={profileQ.data?.email ?? ""} disabled /></div>
+          <div className="space-y-2"><Label>Username</Label><Input value={username} onChange={(e) => setUsername(e.target.value)} /></div>
           <div className="space-y-2"><Label>Nome</Label><Input value={firstName} onChange={(e) => setFirstName(e.target.value)} /></div>
           <div className="space-y-2"><Label>Cognome</Label><Input value={lastName} onChange={(e) => setLastName(e.target.value)} /></div>
           <Button onClick={() => saveProfile.mutate()} disabled={saveProfile.isPending}>Salva profilo</Button>

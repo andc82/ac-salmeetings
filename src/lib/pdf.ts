@@ -355,8 +355,6 @@ function renderRuns(args: {
     return pdf.getTextWidth(t.text);
   };
 
-  let isFirstLine = true;
-
   // compute prefix width once
   let prefixWidth = 0;
   if (prefix) {
@@ -366,28 +364,22 @@ function renderRuns(args: {
 
   for (const tok of tokens) {
     if (tok.isNewline) {
-      flushLine(false);
-      isFirstLine = false;
+      flushLine();
       continue;
     }
     const w = measure(tok);
-    const effectiveMax = maxWidth - (isFirstLine && prefix ? prefixWidth : 0);
+    const effectiveMax = maxWidth - (isFirstLineOfBlock && prefix ? prefixWidth : 0);
     if (!tok.isSpace && lineWidth + w > effectiveMax && lineTokens.length > 0) {
-      // wrap
-      // drop trailing space tokens
       while (lineTokens.length && lineTokens[lineTokens.length - 1].token.isSpace) {
         const removed = lineTokens.pop()!;
         lineWidth -= removed.width;
       }
-      flushLine(false);
-      isFirstLine = false;
-      // skip leading spaces on next line
+      flushLine();
       if (tok.isSpace) continue;
     }
     lineTokens.push({ token: tok, width: w });
     lineWidth += w;
-    cursorX += w;
   }
-  if (lineTokens.length) flushLine(true);
-  void isFirstLine;
+  if (lineTokens.length) flushLine();
 }
+

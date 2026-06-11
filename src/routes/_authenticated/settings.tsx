@@ -94,7 +94,8 @@ function ProfileTab() {
         <h2 className="text-lg font-semibold mb-1">Dati personali</h2>
         <p className="text-sm text-muted-foreground mb-5">Aggiorna i tuoi dati personali.</p>
         <div className="space-y-4">
-          <div className="space-y-2"><Label>Username</Label><Input value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+          <div className="space-y-2"><Label>Username</Label><Input value={username} disabled /></div>
+          <div className="space-y-2"><Label>Email</Label><Input value={email} disabled /></div>
           <div className="space-y-2"><Label>Nome</Label><Input value={firstName} onChange={(e) => setFirstName(e.target.value)} /></div>
           <div className="space-y-2"><Label>Cognome</Label><Input value={lastName} onChange={(e) => setLastName(e.target.value)} /></div>
           <Button onClick={() => saveProfile.mutate()} disabled={saveProfile.isPending}>Salva profilo</Button>

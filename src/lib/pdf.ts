@@ -317,38 +317,35 @@ function renderRuns(args: {
     pdf.setTextColor(run.href ? 30 : 20, run.href ? 80 : 20, run.href ? 200 : 20);
   };
 
-  let cursorX = x;
   let lineTokens: { token: Token; width: number }[] = [];
   let lineWidth = 0;
+  let isFirstLineOfBlock = true;
 
-  const flushLine = (isLast: boolean) => {
+  const flushLine = () => {
     ensureSpace(lineHeight);
     let lx = x;
-    // prefix on first line only
-    if (prefix && getY() === args.getY() /* always true */ ) {
-      // Print prefix as bold-ish? keep normal
+    if (isFirstLineOfBlock && prefix) {
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(20);
+      pdf.text(prefix, lx, getY() + lineHeight - 4);
+      lx += prefixWidth;
     }
-    let printedPrefix = false;
     for (const { token, width } of lineTokens) {
       if (token.isSpace) {
         lx += width;
         continue;
       }
       setStyle(token.run);
-      const txt = (!printedPrefix && prefix ? prefix : "") + token.text;
-      printedPrefix = true;
-      pdf.text(txt, lx, getY() + lineHeight - 4);
+      pdf.text(token.text, lx, getY() + lineHeight - 4);
       if (token.run.href) {
-        const w = pdf.getTextWidth(txt);
-        pdf.link(lx, getY() + 2, w, lineHeight, { url: token.run.href });
+        pdf.link(lx, getY() + 2, width, lineHeight, { url: token.run.href });
       }
-      lx += width + (!printedPrefix ? 0 : 0);
+      lx += width;
     }
     setY(getY() + lineHeight);
     lineTokens = [];
     lineWidth = 0;
-    cursorX = x;
-    void isLast;
+    isFirstLineOfBlock = false;
   };
 
   // We need to measure tokens using their style font

@@ -135,6 +135,7 @@ export async function downloadMinutePdf(opts: {
         lineHeight: lh,
         ensureSpace,
         prefix,
+        bullet: block.kind === "list-item" && !block.ordered,
         pageH,
         margin,
       });

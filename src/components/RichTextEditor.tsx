@@ -10,7 +10,7 @@ import {
   Heading1, Heading2, Heading3, Link as LinkIcon, Unlink, Undo2, Redo2,
   IndentDecrease, IndentIncrease, Quote, Code,
 } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 const COLORS = ["#ffffff", "#facc15", "#f97316", "#ef4444", "#22c55e", "#06b6d4", "#3b82f6", "#a855f7", "#94a3b8"];
 
@@ -34,6 +34,14 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
     onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
     immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (!editor) return;
+    const incoming = value || "<p></p>";
+    if (editor.getHTML() !== incoming) {
+      editor.commands.setContent(incoming, { emitUpdate: false });
+    }
+  }, [editor, value]);
 
   if (!editor) return null;
 

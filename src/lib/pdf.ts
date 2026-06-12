@@ -107,8 +107,8 @@ export async function downloadMinutePdf(opts: {
         ensureSpace(lh + 4);
         y += 4;
       } else if (block.kind === "list-item") {
-        indent = 14 + block.depth * 14;
-        prefix = block.ordered ? `${block.index}. ` : "•  ";
+        indent = 18 + block.depth * 14;
+        prefix = block.ordered ? `${block.index}. ` : "";
       }
 
       pdf.setTextColor(20);

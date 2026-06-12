@@ -3,16 +3,18 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import { TextStyle, Color } from "@tiptap/extension-text-style";
+import Highlight from "@tiptap/extension-highlight";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Bold, Italic, UnderlineIcon, Strikethrough, List, ListOrdered,
   Heading1, Heading2, Heading3, Link as LinkIcon, Unlink, Undo2, Redo2,
-  IndentDecrease, IndentIncrease, Quote, Code,
+  IndentDecrease, IndentIncrease, Quote, Code, Highlighter,
 } from "lucide-react";
 import { useCallback, useEffect } from "react";
 
 const COLORS = ["#ffffff", "#facc15", "#f97316", "#ef4444", "#22c55e", "#06b6d4", "#3b82f6", "#a855f7", "#94a3b8"];
+const HIGHLIGHTS = ["#fef08a", "#fed7aa", "#fecaca", "#bbf7d0", "#bae6fd", "#c7d2fe", "#e9d5ff", "#f5d0fe"];
 
 interface Props {
   value: string;
@@ -27,6 +29,7 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
       Underline,
       TextStyle,
       Color,
+      Highlight.configure({ multicolor: true }),
       Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener", target: "_blank" }, validate: (href) => /^https?:\/\//i.test(href) }),
     ],
     content: value || "<p></p>",
@@ -99,6 +102,18 @@ function Toolbar({ editor }: { editor: Editor }) {
         ))}
         <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().unsetColor().run()}
           title="Rimuovi colore"
+          className="ml-1 text-xs text-muted-foreground hover:text-foreground">×</button>
+      </div>
+      <Separator orientation="vertical" className="mx-1 h-6" />
+      <div className="flex items-center gap-1 px-1">
+        <Highlighter className="h-4 w-4 text-muted-foreground" />
+        {HIGHLIGHTS.map((c) => (
+          <button key={c} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().setHighlight({ color: c }).run()}
+            title={`Evidenzia ${c}`}
+            className="h-5 w-5 rounded-sm border border-border hover:scale-110 transition-transform" style={{ background: c }} />
+        ))}
+        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().unsetHighlight().run()}
+          title="Rimuovi evidenziazione"
           className="ml-1 text-xs text-muted-foreground hover:text-foreground">×</button>
       </div>
       <Separator orientation="vertical" className="mx-1 h-6" />

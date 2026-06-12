@@ -9,11 +9,12 @@ import { Separator } from "@/components/ui/separator";
 import {
   Bold, Italic, UnderlineIcon, Strikethrough, List, ListOrdered,
   Heading1, Heading2, Heading3, Link as LinkIcon, Unlink, Undo2, Redo2,
-  IndentDecrease, IndentIncrease, Quote, Code,
+  IndentDecrease, IndentIncrease, Quote, Code, Highlighter,
 } from "lucide-react";
 import { useCallback, useEffect } from "react";
 
 const COLORS = ["#ffffff", "#facc15", "#f97316", "#ef4444", "#22c55e", "#06b6d4", "#3b82f6", "#a855f7", "#94a3b8"];
+const HIGHLIGHTS = ["#fef08a", "#fed7aa", "#fecaca", "#bbf7d0", "#bae6fd", "#c7d2fe", "#e9d5ff", "#f5d0fe"];
 
 interface Props {
   value: string;

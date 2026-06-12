@@ -105,6 +105,18 @@ function Toolbar({ editor }: { editor: Editor }) {
           className="ml-1 text-xs text-muted-foreground hover:text-foreground">×</button>
       </div>
       <Separator orientation="vertical" className="mx-1 h-6" />
+      <div className="flex items-center gap-1 px-1">
+        <Highlighter className="h-4 w-4 text-muted-foreground" />
+        {HIGHLIGHTS.map((c) => (
+          <button key={c} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().setHighlight({ color: c }).run()}
+            title={`Evidenzia ${c}`}
+            className="h-5 w-5 rounded-sm border border-border hover:scale-110 transition-transform" style={{ background: c }} />
+        ))}
+        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().unsetHighlight().run()}
+          title="Rimuovi evidenziazione"
+          className="ml-1 text-xs text-muted-foreground hover:text-foreground">×</button>
+      </div>
+      <Separator orientation="vertical" className="mx-1 h-6" />
       <Btn onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} title="Undo"><Undo2 className="h-4 w-4" /></Btn>
       <Btn onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} title="Redo"><Redo2 className="h-4 w-4" /></Btn>
     </div>

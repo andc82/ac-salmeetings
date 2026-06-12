@@ -392,24 +392,3 @@ function renderRuns(args: {
   if (lineTokens.length) flushLine();
 }
 
-  for (const tok of tokens) {
-    if (tok.isNewline) {
-      flushLine();
-      continue;
-    }
-    const w = measure(tok);
-    const effectiveMax = maxWidth - (isFirstLineOfBlock && prefix ? prefixWidth : 0);
-    if (!tok.isSpace && lineWidth + w > effectiveMax && lineTokens.length > 0) {
-      while (lineTokens.length && lineTokens[lineTokens.length - 1].token.isSpace) {
-        const removed = lineTokens.pop()!;
-        lineWidth -= removed.width;
-      }
-      flushLine();
-      if (tok.isSpace) continue;
-    }
-    lineTokens.push({ token: tok, width: w });
-    lineWidth += w;
-  }
-  if (lineTokens.length) flushLine();
-}
-

@@ -291,10 +291,11 @@ function renderRuns(args: {
   lineHeight: number;
   ensureSpace: (h: number) => void;
   prefix?: string;
+  bullet?: boolean;
   pageH: number;
   margin: number;
 }) {
-  const { pdf, runs, x, maxWidth, getY, setY, lineHeight, ensureSpace, prefix } = args;
+  const { pdf, runs, x, maxWidth, getY, setY, lineHeight, ensureSpace, prefix, bullet } = args;
 
   // Tokenize each run into words while preserving spaces and explicit newlines
   type Token = { text: string; run: InlineRun; isSpace: boolean; isNewline: boolean };
@@ -304,7 +305,6 @@ function renderRuns(args: {
       tokens.push({ text: "", run: r, isSpace: false, isNewline: true });
       continue;
     }
-    // Split keeping spaces
     const parts = r.text.split(/(\s+)/);
     for (const p of parts) {
       if (!p) continue;
@@ -318,6 +318,15 @@ function renderRuns(args: {
     pdf.setTextColor(run.href ? 30 : 20, run.href ? 80 : 20, run.href ? 200 : 20);
   };
 
+  // Reserved space before the first line for either a numeric prefix or a bullet glyph.
+  let prefixWidth = 0;
+  if (prefix) {
+    pdf.setFont("helvetica", "normal");
+    prefixWidth = pdf.getTextWidth(prefix);
+  } else if (bullet) {
+    prefixWidth = 12; // reserve space for the bullet dot
+  }
+
   let lineTokens: { token: Token; width: number }[] = [];
   let lineWidth = 0;
   let isFirstLineOfBlock = true;
@@ -325,11 +334,19 @@ function renderRuns(args: {
   const flushLine = () => {
     ensureSpace(lineHeight);
     let lx = x;
-    if (isFirstLineOfBlock && prefix) {
-      pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(20);
-      pdf.text(prefix, lx, getY() + lineHeight - 4);
-      lx += prefixWidth;
+    if (isFirstLineOfBlock) {
+      if (prefix) {
+        pdf.setFont("helvetica", "normal");
+        pdf.setTextColor(20);
+        pdf.text(prefix, lx, getY() + lineHeight - 4);
+        lx += prefixWidth;
+      } else if (bullet) {
+        // draw a small filled circle as the bullet marker
+        pdf.setFillColor(20);
+        const cy = getY() + lineHeight - 7;
+        pdf.circle(lx + 3, cy, 1.6, "F");
+        lx += prefixWidth;
+      }
     }
     for (const { token, width } of lineTokens) {
       if (token.isSpace) {
@@ -349,19 +366,31 @@ function renderRuns(args: {
     isFirstLineOfBlock = false;
   };
 
-  // We need to measure tokens using their style font
   const measure = (t: Token) => {
     setStyle(t.run);
-    // include prefix width on first token of first line
     return pdf.getTextWidth(t.text);
   };
 
-  // compute prefix width once
-  let prefixWidth = 0;
-  if (prefix) {
-    pdf.setFont("helvetica", "normal");
-    prefixWidth = pdf.getTextWidth(prefix);
+  for (const tok of tokens) {
+    if (tok.isNewline) {
+      flushLine();
+      continue;
+    }
+    const w = measure(tok);
+    const effectiveMax = maxWidth - (isFirstLineOfBlock ? prefixWidth : 0);
+    if (!tok.isSpace && lineWidth + w > effectiveMax && lineTokens.length > 0) {
+      while (lineTokens.length && lineTokens[lineTokens.length - 1].token.isSpace) {
+        const removed = lineTokens.pop()!;
+        lineWidth -= removed.width;
+      }
+      flushLine();
+      if (tok.isSpace) continue;
+    }
+    lineTokens.push({ token: tok, width: w });
+    lineWidth += w;
   }
+  if (lineTokens.length) flushLine();
+}
 
   for (const tok of tokens) {
     if (tok.isNewline) {

@@ -35,6 +35,14 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
     immediatelyRender: false,
   });
 
+  useEffect(() => {
+    if (!editor) return;
+    const incoming = value || "<p></p>";
+    if (editor.getHTML() !== incoming) {
+      editor.commands.setContent(incoming, { emitUpdate: false });
+    }
+  }, [editor, value]);
+
   if (!editor) return null;
 
   return (

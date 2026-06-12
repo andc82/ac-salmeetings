@@ -49,7 +49,7 @@ function AuthPage() {
             <span className="font-display text-lg font-semibold text-primary">AC</span>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">AC SAL Meetings</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Gestione minute SAL fornitori</p>
+          <p className="mt-1 text-sm text-muted-foreground">Gestione SAL fornitori</p>
         </div>
         <form onSubmit={onSubmit} className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-xl shadow-black/30">
           <div className="space-y-2">

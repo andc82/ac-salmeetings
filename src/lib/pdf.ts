@@ -5,6 +5,7 @@ type InlineRun = {
   bold?: boolean;
   italic?: boolean;
   href?: string;
+  highlight?: string; // hex color
 };
 
 type Block =
@@ -210,16 +211,22 @@ function walk(
         let idx = 1;
         el.childNodes.forEach((li) => {
           if (li.nodeType === Node.ELEMENT_NODE && (li as HTMLElement).tagName.toLowerCase() === "li") {
+            const liEl = li as HTMLElement;
             out.push({
               kind: "list-item",
-              runs: collectRuns(li as HTMLElement),
+              runs: collectRuns(liEl, { skipBlocks: true }),
               ordered,
               index: idx++,
               depth: ctx.depth,
             });
-            // Nested lists
-            (li as HTMLElement).querySelectorAll(":scope > ul, :scope > ol").forEach((nested) => {
-              walk(nested, out, { depth: ctx.depth + 1, orderedStack });
+            // Nested lists inside this li
+            liEl.childNodes.forEach((c) => {
+              if (c.nodeType === Node.ELEMENT_NODE) {
+                const ct = (c as HTMLElement).tagName.toLowerCase();
+                if (ct === "ul" || ct === "ol") {
+                  walk({ childNodes: [c] } as any, out, { depth: ctx.depth + 1, orderedStack });
+                }
+              }
             });
           }
         });
@@ -241,16 +248,17 @@ function walk(
   });
 }
 
-function collectRuns(el: HTMLElement): InlineRun[] {
+function collectRuns(el: HTMLElement, opts?: { skipBlocks?: boolean }): InlineRun[] {
+  const skipBlocks = opts?.skipBlocks ?? false;
+  const BLOCK_TAGS = new Set(["ul", "ol", "li", "p", "div", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "hr"]);
   const runs: InlineRun[] = [];
-  const push = (text: string, style: { bold?: boolean; italic?: boolean; href?: string }) => {
+  const push = (text: string, style: { bold?: boolean; italic?: boolean; href?: string; highlight?: string }) => {
     if (!text) return;
     runs.push({ text, ...style });
   };
 
-  const visit = (n: Node, style: { bold?: boolean; italic?: boolean; href?: string }) => {
+  const visit = (n: Node, style: { bold?: boolean; italic?: boolean; href?: string; highlight?: string }) => {
     if (n.nodeType === Node.TEXT_NODE) {
-      // Collapse whitespace like browsers do for inline content
       const txt = (n.textContent || "").replace(/\s+/g, " ");
       push(txt, style);
       return;
@@ -259,24 +267,49 @@ function collectRuns(el: HTMLElement): InlineRun[] {
     const e = n as HTMLElement;
     const tag = e.tagName.toLowerCase();
     if (tag === "br") {
-      // line break inside a paragraph: encode as newline sentinel
       runs.push({ text: "\n" });
       return;
     }
+    if (skipBlocks && BLOCK_TAGS.has(tag)) return;
     const next = { ...style };
     if (tag === "strong" || tag === "b") next.bold = true;
     if (tag === "em" || tag === "i") next.italic = true;
     if (tag === "a") next.href = (e as HTMLAnchorElement).getAttribute("href") || style.href;
+    if (tag === "mark") {
+      const c = e.getAttribute("data-color") || e.style.backgroundColor || "#fef08a";
+      next.highlight = normalizeColor(c);
+    } else {
+      const bg = e.style.backgroundColor;
+      if (bg && bg !== "transparent") next.highlight = normalizeColor(bg);
+    }
     e.childNodes.forEach((c) => visit(c, next));
   };
 
   el.childNodes.forEach((c) => visit(c, {}));
 
-  // Trim leading/trailing whitespace runs
   while (runs.length && runs[0].text.trim() === "" && runs[0].text !== "\n") runs.shift();
   while (runs.length && runs[runs.length - 1].text.trim() === "" && runs[runs.length - 1].text !== "\n") runs.pop();
 
   return runs;
+}
+
+function normalizeColor(c: string): string {
+  c = c.trim();
+  if (c.startsWith("#")) return c;
+  const m = c.match(/rgba?\(([^)]+)\)/i);
+  if (m) {
+    const parts = m[1].split(",").map((s) => parseFloat(s.trim()));
+    const [r, g, b] = parts;
+    const toHex = (n: number) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+  return "#fef08a";
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const v = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)];
 }
 
 // ---------- Run renderer with wrapping + hyperlinks ----------
@@ -347,6 +380,17 @@ function renderRuns(args: {
         pdf.circle(lx + 3, cy, 1.6, "F");
         lx += prefixWidth;
       }
+    }
+    // First pass: draw highlight backgrounds (including the space that follows a highlighted word)
+    let hx = lx;
+    for (let i = 0; i < lineTokens.length; i++) {
+      const { token, width } = lineTokens[i];
+      if (token.run.highlight) {
+        const [r, g, b] = hexToRgb(token.run.highlight);
+        pdf.setFillColor(r, g, b);
+        pdf.rect(hx, getY() + 2, width, lineHeight - 2, "F");
+      }
+      hx += width;
     }
     for (const { token, width } of lineTokens) {
       if (token.isSpace) {

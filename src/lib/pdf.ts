@@ -306,6 +306,12 @@ function normalizeColor(c: string): string {
   return "#fef08a";
 }
 
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const v = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)];
+}
+
 // ---------- Run renderer with wrapping + hyperlinks ----------
 
 function renderRuns(args: {

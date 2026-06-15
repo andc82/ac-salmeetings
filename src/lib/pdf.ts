@@ -5,6 +5,7 @@ type InlineRun = {
   bold?: boolean;
   italic?: boolean;
   href?: string;
+  highlight?: string; // hex color
 };
 
 type Block =

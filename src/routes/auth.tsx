@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { resolveUsernameEmail } from "@/lib/auth.functions";
+import { loginWithUsername } from "@/lib/auth.functions";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -29,8 +29,13 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { email } = await resolveUsernameEmail({ data: { username: username.trim() } });
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const tokens = await loginWithUsername({
+        data: { username: username.trim(), password },
+      });
+      const { error } = await supabase.auth.setSession({
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+      });
       if (error) { toast.error("Credenziali non valide"); return; }
       toast.success("Accesso effettuato");
       navigate({ to: "/meetings" });

@@ -211,16 +211,22 @@ function walk(
         let idx = 1;
         el.childNodes.forEach((li) => {
           if (li.nodeType === Node.ELEMENT_NODE && (li as HTMLElement).tagName.toLowerCase() === "li") {
+            const liEl = li as HTMLElement;
             out.push({
               kind: "list-item",
-              runs: collectRuns(li as HTMLElement),
+              runs: collectRuns(liEl, { skipBlocks: true }),
               ordered,
               index: idx++,
               depth: ctx.depth,
             });
-            // Nested lists
-            (li as HTMLElement).querySelectorAll(":scope > ul, :scope > ol").forEach((nested) => {
-              walk(nested, out, { depth: ctx.depth + 1, orderedStack });
+            // Nested lists inside this li
+            liEl.childNodes.forEach((c) => {
+              if (c.nodeType === Node.ELEMENT_NODE) {
+                const ct = (c as HTMLElement).tagName.toLowerCase();
+                if (ct === "ul" || ct === "ol") {
+                  walk({ childNodes: [c] } as any, out, { depth: ctx.depth + 1, orderedStack });
+                }
+              }
             });
           }
         });

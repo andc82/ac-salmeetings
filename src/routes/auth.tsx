@@ -29,8 +29,13 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { email } = await resolveUsernameEmail({ data: { username: username.trim() } });
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const tokens = await loginWithUsername({
+        data: { username: username.trim(), password },
+      });
+      const { error } = await supabase.auth.setSession({
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+      });
       if (error) { toast.error("Credenziali non valide"); return; }
       toast.success("Accesso effettuato");
       navigate({ to: "/meetings" });

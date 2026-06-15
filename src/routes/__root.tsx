@@ -46,17 +46,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AC SAL Meetings" },
-      { name: "description", content: "Portale per la gestione dei SAL con i fornitori." },
-      { property: "og:title", content: "AC SAL Meetings" },
-      { name: "twitter:title", content: "AC SAL Meetings" },
-      { property: "og:description", content: "Portale per la gestione dei SAL con i fornitori." },
-      { name: "twitter:description", content: "Portale per la gestione dei SAL con i fornitori." },
+      { title: "AC SAL Meetings — Gestione minute SAL fornitori" },
+      { name: "description", content: "Portale per la gestione delle minute degli incontri SAL (Stato Avanzamento Lavori) con i fornitori: redazione, archivio ed esportazione in PDF." },
+      { property: "og:title", content: "AC SAL Meetings — Gestione minute SAL fornitori" },
+      { name: "twitter:title", content: "AC SAL Meetings — Gestione minute SAL fornitori" },
+      { property: "og:description", content: "Portale per la gestione delle minute degli incontri SAL (Stato Avanzamento Lavori) con i fornitori: redazione, archivio ed esportazione in PDF." },
+      { name: "twitter:description", content: "Portale per la gestione delle minute degli incontri SAL (Stato Avanzamento Lavori) con i fornitori: redazione, archivio ed esportazione in PDF." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4a351cf4-3375-48bc-811f-0c9c72184029" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4a351cf4-3375-48bc-811f-0c9c72184029" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:site_name", content: "AC SAL Meetings" },
       { property: "og:type", content: "website" },
-      { name: "robots", content: "noindex, nofollow" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -88,7 +88,7 @@ function RootComponent() {
   }, [router, queryClient]);
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <main><Outlet /></main>
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );

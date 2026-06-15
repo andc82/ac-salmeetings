@@ -134,7 +134,7 @@ function NewMeeting() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3 min-w-0">
-          <Button variant="ghost" size="icon" onClick={() => setStarted(false)}><ArrowLeft className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" aria-label="Torna indietro" onClick={() => setStarted(false)}><ArrowLeft className="h-4 w-4" /></Button>
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-widest text-muted-foreground">{supplierName}</p>
             <h1 className="mt-1 text-2xl font-semibold tracking-tight truncate">{title}</h1>

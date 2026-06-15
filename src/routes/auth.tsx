@@ -9,7 +9,16 @@ import { loginWithUsername } from "@/lib/auth.functions";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Accedi — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Accedi — AC SAL Meetings" },
+      { name: "description", content: "Accedi al portale AC SAL Meetings con username e password per gestire le minute degli incontri SAL con i fornitori." },
+      { property: "og:title", content: "Accedi — AC SAL Meetings" },
+      { property: "og:description", content: "Accedi al portale AC SAL Meetings con username e password per gestire le minute degli incontri SAL con i fornitori." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/auth" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/auth" }],
+  }),
   component: AuthPage,
 });
 

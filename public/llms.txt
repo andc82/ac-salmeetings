@@ -1,0 +1,8 @@
+# AC SAL Meetings
+
+> Portale privato per la gestione delle minute SAL (Stato Avanzamento Lavori) con i fornitori. L'accesso ai contenuti richiede autenticazione.
+
+## Pages
+
+- [Home](/): Reindirizza al portale di gestione delle minute SAL.
+- [Accedi](/auth): Pagina di accesso al portale per utenti autorizzati.

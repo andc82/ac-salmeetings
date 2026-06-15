@@ -145,7 +145,7 @@ function EmptyState({ icon: Icon, title, desc, action }: any) {
       <div className="mx-auto h-12 w-12 rounded-full bg-muted grid place-items-center mb-4">
         <Icon className="h-5 w-5 text-muted-foreground" />
       </div>
-      <h3 className="font-semibold">{title}</h3>
+      <h2 className="font-semibold">{title}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
       {action && <div className="mt-5">{action}</div>}
     </Card>

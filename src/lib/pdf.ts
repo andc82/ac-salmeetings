@@ -375,6 +375,17 @@ function renderRuns(args: {
         lx += prefixWidth;
       }
     }
+    // First pass: draw highlight backgrounds (including the space that follows a highlighted word)
+    let hx = lx;
+    for (let i = 0; i < lineTokens.length; i++) {
+      const { token, width } = lineTokens[i];
+      if (token.run.highlight) {
+        const [r, g, b] = hexToRgb(token.run.highlight);
+        pdf.setFillColor(r, g, b);
+        pdf.rect(hx, getY() + 2, width, lineHeight - 2, "F");
+      }
+      hx += width;
+    }
     for (const { token, width } of lineTokens) {
       if (token.isSpace) {
         lx += width;

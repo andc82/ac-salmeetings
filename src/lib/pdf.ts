@@ -250,7 +250,7 @@ function walk(
 
 function collectRuns(el: HTMLElement, opts?: { skipBlocks?: boolean }): InlineRun[] {
   const skipBlocks = opts?.skipBlocks ?? false;
-  const BLOCK_TAGS = new Set(["ul", "ol", "li", "p", "div", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "hr"]);
+  const BLOCK_TAGS = new Set(["ul", "ol"]);
   const runs: InlineRun[] = [];
   const push = (text: string, style: { bold?: boolean; italic?: boolean; href?: string; highlight?: string }) => {
     if (!text) return;

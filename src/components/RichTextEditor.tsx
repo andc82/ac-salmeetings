@@ -20,9 +20,10 @@ interface Props {
   value: string;
   onChange?: (html: string) => void;
   editable?: boolean;
+  toolbarTopClass?: string;
 }
 
-export function RichTextEditor({ value, onChange, editable = true }: Props) {
+export function RichTextEditor({ value, onChange, editable = true, toolbarTopClass }: Props) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
@@ -50,13 +51,13 @@ export function RichTextEditor({ value, onChange, editable = true }: Props) {
 
   return (
     <div className="tiptap-editor rounded-xl border border-border bg-card">
-      {editable && <Toolbar editor={editor} />}
+      {editable && <Toolbar editor={editor} topClass={toolbarTopClass} />}
       <EditorContent editor={editor} />
     </div>
   );
 }
 
-function Toolbar({ editor }: { editor: Editor }) {
+function Toolbar({ editor, topClass }: { editor: Editor; topClass?: string }) {
   const setLink = useCallback(() => {
     const prev = editor.getAttributes("link").href ?? "";
     const url = window.prompt("URL del link", prev);
@@ -74,7 +75,7 @@ function Toolbar({ editor }: { editor: Editor }) {
   );
 
   return (
-    <div className="sticky top-16 z-20 flex flex-wrap items-center gap-1 border-b border-border bg-card/95 backdrop-blur px-2 py-1.5 rounded-t-xl">
+    <div className={`sticky ${topClass ?? "top-16"} z-20 flex flex-wrap items-center gap-1 border-b border-border bg-card/95 backdrop-blur px-2 py-1.5 rounded-t-xl`}>
       <Btn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title="Bold"><Bold className="h-4 w-4" /></Btn>
       <Btn onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic"><Italic className="h-4 w-4" /></Btn>
       <Btn onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline"><UnderlineIcon className="h-4 w-4" /></Btn>

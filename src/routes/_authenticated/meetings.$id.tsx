@@ -59,7 +59,7 @@ function MeetingDetail() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
+      <div className="sticky top-16 z-30 mb-6 flex items-center justify-between gap-4 flex-wrap bg-background/95 backdrop-blur py-2 -mx-6 px-6">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <Button variant="ghost" size="icon" aria-label="Torna alle minute" onClick={() => navigate({ to: "/meetings" })}><ArrowLeft className="h-4 w-4" /></Button>
           <div className="min-w-0">
@@ -89,7 +89,7 @@ function MeetingDetail() {
       </div>
 
       {editable ? (
-        <RichTextEditor value={content} onChange={setContent} />
+        <RichTextEditor value={content} onChange={setContent} toolbarTopClass="top-32" />
       ) : (
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <div className="tiptap-editor"><div className="ProseMirror" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content || "<p><em>Vuota</em></p>") }} /></div>

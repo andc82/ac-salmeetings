@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { FileText, Settings, Plus, LogOut } from "lucide-react";
+import { FileText, Settings, Plus, LogOut, CalendarRange, CalendarPlus } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -29,6 +29,8 @@ function AuthLayout() {
   const nav = [
     { to: "/meetings", label: "SAL Meetings", icon: FileText },
     { to: "/new-meeting", label: "New SAL Meeting", icon: Plus },
+    { to: "/plannings", label: "Pianificazioni", icon: CalendarRange },
+    { to: "/new-planning", label: "New Pianificazione", icon: CalendarPlus },
     { to: "/settings", label: "Configurazione", icon: Settings },
   ];
 

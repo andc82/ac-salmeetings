@@ -14,6 +14,94 @@ export type Database = {
   }
   public: {
     Tables: {
+      planning_projects: {
+        Row: {
+          created_at: string
+          dev_end: string
+          dev_start: string
+          id: string
+          planning_id: string
+          prod_release: string | null
+          sort_order: number
+          title: string
+          uat_end: string | null
+          uat_start: string | null
+        }
+        Insert: {
+          created_at?: string
+          dev_end: string
+          dev_start: string
+          id?: string
+          planning_id: string
+          prod_release?: string | null
+          sort_order?: number
+          title: string
+          uat_end?: string | null
+          uat_start?: string | null
+        }
+        Update: {
+          created_at?: string
+          dev_end?: string
+          dev_start?: string
+          id?: string
+          planning_id?: string
+          prod_release?: string | null
+          sort_order?: number
+          title?: string
+          uat_end?: string | null
+          uat_start?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planning_projects_planning_id_fkey"
+            columns: ["planning_id"]
+            isOneToOne: false
+            referencedRelation: "plannings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plannings: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          owner_id: string
+          start_date: string
+          supplier_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          owner_id: string
+          start_date: string
+          supplier_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          owner_id?: string
+          start_date?: string
+          supplier_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plannings_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

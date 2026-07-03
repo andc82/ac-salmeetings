@@ -90,7 +90,7 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
                 <div key={p.id} className="absolute left-0 right-0 border-b border-border" style={{ top: HEADER_H + y, height: ROW_H }}>
                   <div className="absolute inset-0 flex items-center px-1 gap-1">
                     <div
-                      className="absolute h-6 rounded-md bg-primary/80 text-primary-foreground text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
+                      className="absolute h-6 rounded-md bg-yellow-500/80 text-black text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
                       style={{ left: dev.x, width: dev.w }}
                       title={`Sviluppo: ${p.dev_start} → ${p.dev_end}`}
                     >
@@ -98,11 +98,11 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
                     </div>
                     {uat && (
                       <div
-                        className="absolute h-6 rounded-md bg-amber-500/80 text-black text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
+                        className="absolute h-6 rounded-md bg-sky-500/80 text-white text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
                         style={{ left: uat.x, width: uat.w, top: 8 }}
-                        title={`UAT: ${p.uat_start} → ${p.uat_end}`}
+                        title={`Q&A/UAT: ${p.uat_start} → ${p.uat_end}`}
                       >
-                        UAT
+                        Q&A/UAT
                       </div>
                     )}
                     {prodX !== null && (
@@ -122,8 +122,8 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
         </div>
       </div>
       <div className="flex items-center gap-4 px-4 py-2 border-t border-border text-xs text-muted-foreground">
-        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-sm bg-primary/80" /> Sviluppo</span>
-        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-sm bg-amber-500/80" /> UAT</span>
+        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-sm bg-yellow-500/80" /> Sviluppo</span>
+        <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-sm bg-sky-500/80" /> Q&A/UAT</span>
         <span className="flex items-center gap-1.5"><span className="h-3 w-3 rotate-45 bg-emerald-500 inline-block" /> Rilascio prod</span>
         <span className="ml-auto">Da {format(start, "dd/MM/yyyy")} a {format(end, "dd/MM/yyyy")} — {addDays(start,0) && ""}{totalDays} giorni</span>
       </div>

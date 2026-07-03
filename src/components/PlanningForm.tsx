@@ -77,11 +77,11 @@ export function PlanningProjects({ startDate, endDate, projects, onChange }: Pro
                   <DatePicker value={p.dev_end} onChange={(v) => update(i, { dev_end: v })} min={p.dev_start ?? startDate} max={endDate} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Data inizio UAT</Label>
+                  <Label>Data inizio Q&A/UAT</Label>
                   <DatePicker clearable value={p.uat_start} onChange={(v) => update(i, { uat_start: v })} min={startDate} max={endDate} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Data fine UAT</Label>
+                  <Label>Data fine Q&A/UAT</Label>
                   <DatePicker clearable value={p.uat_end} onChange={(v) => update(i, { uat_end: v })} min={p.uat_start ?? startDate} max={endDate} />
                 </div>
                 <div className="space-y-2 md:col-span-2">
@@ -120,8 +120,8 @@ export function validateProjects(projects: ProjectRow[], startDate: string, endD
     if (!p.dev_start || !p.dev_end) return `Progetto ${n}: date di sviluppo obbligatorie`;
     if (p.dev_end < p.dev_start) return `Progetto ${n}: fine sviluppo precedente all'inizio`;
     if (p.dev_start < startDate || p.dev_end > endDate) return `Progetto ${n}: date sviluppo fuori dal range pianificazione`;
-    if ((p.uat_start && !p.uat_end) || (!p.uat_start && p.uat_end)) return `Progetto ${n}: entrambe le date UAT o nessuna`;
-    if (p.uat_start && p.uat_end && p.uat_end < p.uat_start) return `Progetto ${n}: fine UAT precedente all'inizio`;
+    if ((p.uat_start && !p.uat_end) || (!p.uat_start && p.uat_end)) return `Progetto ${n}: entrambe le date Q&A/UAT o nessuna`;
+    if (p.uat_start && p.uat_end && p.uat_end < p.uat_start) return `Progetto ${n}: fine Q&A/UAT precedente all'inizio`;
   }
   return null;
 }

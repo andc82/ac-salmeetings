@@ -83,6 +83,7 @@ function PlanningDetail() {
   if (q.isLoading) return <p className="text-sm text-muted-foreground">Caricamento...</p>;
   if (q.error || !q.data) return <p className="text-sm text-destructive">Pianificazione non trovata.</p>;
 
+  if (!startDate || !endDate) return <p className="text-sm text-muted-foreground">Caricamento...</p>;
   const supplierName = (q.data.planning as any).suppliers?.name as string | undefined;
   const editable = mode === "edit";
   const gantt = editable ? projectsToGantt(projects) : q.data.projects.map((p: any) => ({ id: p.id, title: p.title, dev_start: p.dev_start, dev_end: p.dev_end, uat_start: p.uat_start, uat_end: p.uat_end, prod_release: p.prod_release }));

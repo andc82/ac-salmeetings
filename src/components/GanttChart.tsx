@@ -209,6 +209,19 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
                 </div>
               );
             })}
+
+            {/* Today marker */}
+            {todayX !== null && (
+              <div
+                className="absolute top-0 z-20 pointer-events-none flex flex-col items-center"
+                style={{ left: todayX, height }}
+              >
+                <div className="bg-red-500 text-white text-[9px] font-semibold px-1.5 py-0.5 rounded-b shadow-sm">
+                  Oggi
+                </div>
+                <div className="w-px bg-red-500 flex-1 opacity-80" />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -69,12 +69,12 @@ export function PlanningProjects({ startDate, endDate, projects, onChange }: Pro
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>Data inizio sviluppo *</Label>
-                  <DatePicker value={p.dev_start} onChange={(v) => update(i, { dev_start: v })} min={startDate} max={endDate} />
+                  <Label>Data inizio sviluppo</Label>
+                  <DatePicker clearable value={p.dev_start} onChange={(v) => update(i, { dev_start: v })} min={startDate} max={endDate} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Data fine sviluppo *</Label>
-                  <DatePicker value={p.dev_end} onChange={(v) => update(i, { dev_end: v })} min={p.dev_start ?? startDate} max={endDate} />
+                  <Label>Data fine sviluppo</Label>
+                  <DatePicker clearable value={p.dev_end} onChange={(v) => update(i, { dev_end: v })} min={p.dev_start ?? startDate} max={endDate} />
                 </div>
                 <div className="space-y-2">
                   <Label>Data inizio Q&A/UAT</Label>

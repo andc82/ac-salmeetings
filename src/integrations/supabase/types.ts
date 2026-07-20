@@ -17,8 +17,8 @@ export type Database = {
       planning_projects: {
         Row: {
           created_at: string
-          dev_end: string
-          dev_start: string
+          dev_end: string | null
+          dev_start: string | null
           id: string
           planning_id: string
           prod_release: string | null
@@ -29,8 +29,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          dev_end: string
-          dev_start: string
+          dev_end?: string | null
+          dev_start?: string | null
           id?: string
           planning_id: string
           prod_release?: string | null
@@ -41,8 +41,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          dev_end?: string
-          dev_start?: string
+          dev_end?: string | null
+          dev_start?: string | null
           id?: string
           planning_id?: string
           prod_release?: string | null

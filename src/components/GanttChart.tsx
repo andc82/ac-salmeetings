@@ -147,7 +147,7 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
             {/* Grid + bars */}
             {projects.map((p, i) => {
               const y = i * ROW_H;
-              const dev = barFor(p.dev_start, p.dev_end);
+              const dev = p.dev_start && p.dev_end ? barFor(p.dev_start, p.dev_end) : null;
               const uat =
                 p.uat_start && p.uat_end ? barFor(p.uat_start, p.uat_end) : null;
               const prodX = p.prod_release
@@ -172,17 +172,19 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
                     );
                   })}
                   <div className="absolute inset-0 flex items-center px-1 gap-1">
-                    <div
-                      className="absolute h-6 rounded-md bg-yellow-500/80 text-black text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
-                      style={{ left: dev.x, width: dev.w }}
-                      title={`Sviluppo: ${p.dev_start} → ${p.dev_end}`}
-                    >
-                      Dev
-                    </div>
+                    {dev && (
+                      <div
+                        className="absolute h-6 rounded-md bg-yellow-500/80 text-black text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
+                        style={{ left: dev.x, width: dev.w, top: uat ? 0 : Math.floor((ROW_H - 24) / 2) }}
+                        title={`Sviluppo: ${p.dev_start} → ${p.dev_end}`}
+                      >
+                        Dev
+                      </div>
+                    )}
                     {uat && (
                       <div
                         className="absolute h-6 rounded-md bg-sky-500/80 text-white text-[11px] px-2 flex items-center overflow-hidden shadow-sm"
-                        style={{ left: uat.x, width: uat.w, top: 8 }}
+                        style={{ left: uat.x, width: uat.w, top: dev ? 8 : Math.floor((ROW_H - 24) / 2) }}
                         title={`Q&A/UAT: ${p.uat_start} → ${p.uat_end}`}
                       >
                         Q&A/UAT
@@ -191,7 +193,7 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
                     {prodX !== null && (
                       <div
                         className="absolute"
-                        style={{ left: prodX - 8, top: (ROW_H - 16) / 2 }}
+                        style={{ left: prodX - 8, top: Math.floor((ROW_H - 16) / 2) }}
                         title={`Rilascio produzione: ${p.prod_release}`}
                       >
                         <div className="h-4 w-4 rotate-45 bg-emerald-500 border border-emerald-300" />

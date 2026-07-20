@@ -51,7 +51,7 @@ function NewPlanning() {
         planning_id: pl.id,
         title: p.title.trim(),
         sort_order: i,
-        dev_start: p.dev_start!, dev_end: p.dev_end!,
+        dev_start: p.dev_start, dev_end: p.dev_end,
         uat_start: p.uat_start, uat_end: p.uat_end, prod_release: p.prod_release,
       }));
       const { error: e2 } = await supabase.from("planning_projects").insert(rows);

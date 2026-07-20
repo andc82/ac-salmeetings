@@ -17,8 +17,8 @@ import { it } from "date-fns/locale";
 export interface GanttProject {
   id: string;
   title: string;
-  dev_start: string;
-  dev_end: string;
+  dev_start?: string | null;
+  dev_end?: string | null;
   uat_start?: string | null;
   uat_end?: string | null;
   prod_release?: string | null;

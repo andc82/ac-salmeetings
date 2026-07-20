@@ -100,12 +100,12 @@ export function PlanningProjects({ startDate, endDate, projects, onChange }: Pro
 
 export function projectsToGantt(projects: ProjectRow[]): GanttProject[] {
   return projects
-    .filter((p) => p.title.trim() && p.dev_start && p.dev_end)
+    .filter((p) => p.title.trim() && (p.dev_start || p.dev_end || p.uat_start || p.uat_end || p.prod_release))
     .map((p, i) => ({
       id: p.id ?? p._key,
       title: p.title || `Progetto ${i + 1}`,
-      dev_start: p.dev_start!,
-      dev_end: p.dev_end!,
+      dev_start: p.dev_start,
+      dev_end: p.dev_end,
       uat_start: p.uat_start,
       uat_end: p.uat_end,
       prod_release: p.prod_release,
@@ -117,11 +117,17 @@ export function validateProjects(projects: ProjectRow[], startDate: string, endD
   for (const [i, p] of projects.entries()) {
     const n = i + 1;
     if (!p.title.trim()) return `Progetto ${n}: titolo obbligatorio`;
-    if (!p.dev_start || !p.dev_end) return `Progetto ${n}: date di sviluppo obbligatorie`;
-    if (p.dev_end < p.dev_start) return `Progetto ${n}: fine sviluppo precedente all'inizio`;
-    if (p.dev_start < startDate || p.dev_end > endDate) return `Progetto ${n}: date sviluppo fuori dal range pianificazione`;
+    if ((p.dev_start && !p.dev_end) || (!p.dev_start && p.dev_end)) return `Progetto ${n}: entrambe le date di sviluppo o nessuna`;
+    if (p.dev_start && p.dev_end) {
+      if (p.dev_end < p.dev_start) return `Progetto ${n}: fine sviluppo precedente all'inizio`;
+      if (p.dev_start < startDate || p.dev_end > endDate) return `Progetto ${n}: date sviluppo fuori dal range pianificazione`;
+    }
     if ((p.uat_start && !p.uat_end) || (!p.uat_start && p.uat_end)) return `Progetto ${n}: entrambe le date Q&A/UAT o nessuna`;
-    if (p.uat_start && p.uat_end && p.uat_end < p.uat_start) return `Progetto ${n}: fine Q&A/UAT precedente all'inizio`;
+    if (p.uat_start && p.uat_end) {
+      if (p.uat_end < p.uat_start) return `Progetto ${n}: fine Q&A/UAT precedente all'inizio`;
+      if (p.uat_start < startDate || p.uat_end > endDate) return `Progetto ${n}: date Q&A/UAT fuori dal range pianificazione`;
+    }
+    if (p.prod_release && (p.prod_release < startDate || p.prod_release > endDate)) return `Progetto ${n}: data rilascio fuori dal range pianificazione`;
   }
   return null;
 }

@@ -65,6 +65,11 @@ export function GanttChart({ startDate, endDate, projects }: Props) {
 
   const height = HEADER_H + projects.length * ROW_H + 8;
 
+  const todayStr = format(new Date(), "yyyy-MM-dd");
+  const today = toDate(todayStr);
+  const showToday = isWithinInterval(today, { start, end });
+  const todayX = showToday ? xFor(todayStr) : null;
+
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
       <div className="flex">

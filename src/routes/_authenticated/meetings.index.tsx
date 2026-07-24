@@ -11,7 +11,18 @@ import { downloadMinutePdf } from "@/lib/pdf";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/meetings/")({
-  head: () => ({ meta: [{ title: "SAL Meetings — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "SAL Meetings — AC SAL Meetings" },
+      { name: "description", content: "Archivio delle minute SAL per fornitore: seleziona un fornitore per consultare, modificare, esportare in PDF o eliminare le minute salvate." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "SAL Meetings — AC SAL Meetings" },
+      { property: "og:description", content: "Archivio delle minute SAL per fornitore con modifica, esportazione PDF ed eliminazione." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/meetings" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/meetings" }],
+  }),
   component: MeetingsPage,
 });
 

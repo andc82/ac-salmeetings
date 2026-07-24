@@ -13,7 +13,18 @@ import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/new-meeting")({
-  head: () => ({ meta: [{ title: "Nuova minuta — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Nuova minuta — AC SAL Meetings" },
+      { name: "description", content: "Crea una nuova minuta SAL: seleziona il fornitore, assegna un titolo e redigi il verbale con l'editor di testo integrato." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Nuova minuta — AC SAL Meetings" },
+      { property: "og:description", content: "Crea una nuova minuta SAL con editor di testo integrato." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/new-meeting" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/new-meeting" }],
+  }),
   component: NewMeeting,
 });
 

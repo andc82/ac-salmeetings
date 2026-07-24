@@ -10,7 +10,18 @@ import { CalendarRange, Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/plannings/")({
-  head: () => ({ meta: [{ title: "Pianificazioni — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Pianificazioni — AC SAL Meetings" },
+      { name: "description", content: "Elenco delle pianificazioni per fornitore: consulta, modifica ed elimina i piani con visualizzazione a diagramma di Gantt." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Pianificazioni — AC SAL Meetings" },
+      { property: "og:description", content: "Elenco delle pianificazioni per fornitore con visualizzazione Gantt." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/plannings" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/plannings" }],
+  }),
   component: PlanningsPage,
 });
 
@@ -62,6 +73,7 @@ function PlanningsPage() {
       </div>
 
       <Card className="p-5 mb-6">
+        <h2 className="sr-only">Filtro per fornitore</h2>
         <label className="text-sm font-medium mb-2 block">Fornitore</label>
         <Select value={supplierId} onValueChange={setSupplierId}>
           <SelectTrigger className="w-full md:w-96"><SelectValue placeholder={suppliers.length ? "Seleziona un fornitore" : "Nessun fornitore — aggiungili in Configurazione"} /></SelectTrigger>
@@ -79,6 +91,7 @@ function PlanningsPage() {
         <EmptyState icon={CalendarRange} title="Nessuna pianificazione" desc={`Nessuna pianificazione per ${supplier?.name}.`} action={<Button onClick={() => navigate({ to: "/new-planning" })}><Plus className="h-4 w-4 mr-2" />Nuova pianificazione</Button>} />
       ) : (
         <Card className="overflow-hidden">
+          <h2 className="sr-only">Elenco pianificazioni</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-background/40 text-xs uppercase tracking-wider text-muted-foreground">

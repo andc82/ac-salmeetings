@@ -12,7 +12,18 @@ import { Pencil, Trash2, Plus, Check, X } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/settings")({
-  head: () => ({ meta: [{ title: "Configurazione — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Configurazione — AC SAL Meetings" },
+      { name: "description", content: "Gestisci il tuo profilo, cambia la password e amministra l'elenco dei fornitori del portale AC SAL Meetings." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Configurazione — AC SAL Meetings" },
+      { property: "og:description", content: "Gestisci profilo, password e fornitori." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/settings" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/settings" }],
+  }),
   component: SettingsPage,
 });
 

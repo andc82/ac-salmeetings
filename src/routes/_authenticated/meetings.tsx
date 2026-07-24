@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/meetings")({
-  head: () => ({ meta: [{ title: "SAL Meetings — AC SAL Meetings" }] }),
+  head: () => ({ meta: [{ name: "robots", content: "noindex, nofollow" }] }),
   component: () => <Outlet />,
 });

@@ -9,23 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedPlanningsRouteImport } from './routes/_authenticated/plannings'
-import { Route as AuthenticatedNewPlanningRouteImport } from './routes/_authenticated/new-planning'
-import { Route as AuthenticatedNewMeetingRouteImport } from './routes/_authenticated/new-meeting'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedMeetingsRouteImport } from './routes/_authenticated/meetings'
-import { Route as AuthenticatedPlanningsIndexRouteImport } from './routes/_authenticated/plannings.index'
+import { Route as AuthenticatedNewMeetingRouteImport } from './routes/_authenticated/new-meeting'
+import { Route as AuthenticatedNewPlanningRouteImport } from './routes/_authenticated/new-planning'
+import { Route as AuthenticatedPlanningsRouteImport } from './routes/_authenticated/plannings'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedMeetingsIndexRouteImport } from './routes/_authenticated/meetings.index'
-import { Route as AuthenticatedPlanningsIdRouteImport } from './routes/_authenticated/plannings.$id'
 import { Route as AuthenticatedMeetingsIdRouteImport } from './routes/_authenticated/meetings.$id'
+import { Route as AuthenticatedPlanningsIndexRouteImport } from './routes/_authenticated/plannings.index'
+import { Route as AuthenticatedPlanningsIdRouteImport } from './routes/_authenticated/plannings.$id'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -33,23 +37,19 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+const AuthenticatedMeetingsRoute = AuthenticatedMeetingsRouteImport.update({
+  id: '/meetings',
+  path: '/meetings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedPlanningsRoute = AuthenticatedPlanningsRouteImport.update({
-  id: '/plannings',
-  path: '/plannings',
+const AuthenticatedNewMeetingRoute = AuthenticatedNewMeetingRouteImport.update({
+  id: '/new-meeting',
+  path: '/new-meeting',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedNewPlanningRoute =
@@ -58,15 +58,26 @@ const AuthenticatedNewPlanningRoute =
     path: '/new-planning',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedNewMeetingRoute = AuthenticatedNewMeetingRouteImport.update({
-  id: '/new-meeting',
-  path: '/new-meeting',
+const AuthenticatedPlanningsRoute = AuthenticatedPlanningsRouteImport.update({
+  id: '/plannings',
+  path: '/plannings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMeetingsRoute = AuthenticatedMeetingsRouteImport.update({
-  id: '/meetings',
-  path: '/meetings',
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMeetingsIndexRoute =
+  AuthenticatedMeetingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMeetingsRoute,
+  } as any)
+const AuthenticatedMeetingsIdRoute = AuthenticatedMeetingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedMeetingsRoute,
 } as any)
 const AuthenticatedPlanningsIndexRoute =
   AuthenticatedPlanningsIndexRouteImport.update({
@@ -74,23 +85,12 @@ const AuthenticatedPlanningsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedPlanningsRoute,
   } as any)
-const AuthenticatedMeetingsIndexRoute =
-  AuthenticatedMeetingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedMeetingsRoute,
-  } as any)
 const AuthenticatedPlanningsIdRoute =
   AuthenticatedPlanningsIdRouteImport.update({
     id: '/$id',
     path: '/$id',
     getParentRoute: () => AuthenticatedPlanningsRoute,
   } as any)
-const AuthenticatedMeetingsIdRoute = AuthenticatedMeetingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AuthenticatedMeetingsRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -187,18 +187,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -208,32 +201,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/plannings': {
-      id: '/_authenticated/plannings'
-      path: '/plannings'
-      fullPath: '/plannings'
-      preLoaderRoute: typeof AuthenticatedPlanningsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/new-planning': {
-      id: '/_authenticated/new-planning'
-      path: '/new-planning'
-      fullPath: '/new-planning'
-      preLoaderRoute: typeof AuthenticatedNewPlanningRouteImport
+    '/_authenticated/meetings': {
+      id: '/_authenticated/meetings'
+      path: '/meetings'
+      fullPath: '/meetings'
+      preLoaderRoute: typeof AuthenticatedMeetingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/new-meeting': {
@@ -243,19 +229,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNewMeetingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/meetings': {
-      id: '/_authenticated/meetings'
-      path: '/meetings'
-      fullPath: '/meetings'
-      preLoaderRoute: typeof AuthenticatedMeetingsRouteImport
+    '/_authenticated/new-planning': {
+      id: '/_authenticated/new-planning'
+      path: '/new-planning'
+      fullPath: '/new-planning'
+      preLoaderRoute: typeof AuthenticatedNewPlanningRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/plannings/': {
-      id: '/_authenticated/plannings/'
-      path: '/'
-      fullPath: '/plannings/'
-      preLoaderRoute: typeof AuthenticatedPlanningsIndexRouteImport
-      parentRoute: typeof AuthenticatedPlanningsRoute
+    '/_authenticated/plannings': {
+      id: '/_authenticated/plannings'
+      path: '/plannings'
+      fullPath: '/plannings'
+      preLoaderRoute: typeof AuthenticatedPlanningsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/meetings/': {
       id: '/_authenticated/meetings/'
@@ -264,19 +257,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMeetingsIndexRouteImport
       parentRoute: typeof AuthenticatedMeetingsRoute
     }
-    '/_authenticated/plannings/$id': {
-      id: '/_authenticated/plannings/$id'
-      path: '/$id'
-      fullPath: '/plannings/$id'
-      preLoaderRoute: typeof AuthenticatedPlanningsIdRouteImport
-      parentRoute: typeof AuthenticatedPlanningsRoute
-    }
     '/_authenticated/meetings/$id': {
       id: '/_authenticated/meetings/$id'
       path: '/$id'
       fullPath: '/meetings/$id'
       preLoaderRoute: typeof AuthenticatedMeetingsIdRouteImport
       parentRoute: typeof AuthenticatedMeetingsRoute
+    }
+    '/_authenticated/plannings/': {
+      id: '/_authenticated/plannings/'
+      path: '/'
+      fullPath: '/plannings/'
+      preLoaderRoute: typeof AuthenticatedPlanningsIndexRouteImport
+      parentRoute: typeof AuthenticatedPlanningsRoute
+    }
+    '/_authenticated/plannings/$id': {
+      id: '/_authenticated/plannings/$id'
+      path: '/$id'
+      fullPath: '/plannings/$id'
+      preLoaderRoute: typeof AuthenticatedPlanningsIdRouteImport
+      parentRoute: typeof AuthenticatedPlanningsRoute
     }
   }
 }

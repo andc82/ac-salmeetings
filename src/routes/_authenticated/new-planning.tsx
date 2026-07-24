@@ -14,7 +14,18 @@ import { ArrowLeft, Save } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/new-planning")({
-  head: () => ({ meta: [{ title: "Nuova pianificazione — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Nuova pianificazione — AC SAL Meetings" },
+      { name: "description", content: "Crea una nuova pianificazione: seleziona fornitore, definisci periodo e progetti con date di sviluppo, Q&A/UAT e rilascio in produzione." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Nuova pianificazione — AC SAL Meetings" },
+      { property: "og:description", content: "Crea una nuova pianificazione con progetti e diagramma di Gantt." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/new-planning" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/new-planning" }],
+  }),
   component: NewPlanning,
 });
 

@@ -15,7 +15,16 @@ const search = z.object({ mode: z.enum(["view", "edit"]).optional().default("vie
 
 export const Route = createFileRoute("/_authenticated/meetings/$id")({
   validateSearch: search,
-  head: () => ({ meta: [{ title: "Minuta — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Minuta — AC SAL Meetings" },
+      { name: "description", content: "Visualizza, modifica o esporta in PDF una minuta SAL salvata nel portale AC SAL Meetings." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Minuta — AC SAL Meetings" },
+      { property: "og:description", content: "Visualizza o modifica una minuta SAL con esportazione PDF." },
+      { property: "og:type", content: "article" },
+    ],
+  }),
   component: MeetingDetail,
 });
 

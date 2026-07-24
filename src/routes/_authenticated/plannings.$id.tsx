@@ -16,7 +16,16 @@ const search = z.object({ mode: z.enum(["view", "edit"]).optional().default("vie
 
 export const Route = createFileRoute("/_authenticated/plannings/$id")({
   validateSearch: search,
-  head: () => ({ meta: [{ title: "Pianificazione — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Pianificazione — AC SAL Meetings" },
+      { name: "description", content: "Visualizza o modifica una pianificazione con diagramma di Gantt: sviluppo, Q&A/UAT e rilascio in produzione per ogni progetto." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Pianificazione — AC SAL Meetings" },
+      { property: "og:description", content: "Visualizza o modifica una pianificazione con Gantt." },
+      { property: "og:type", content: "article" },
+    ],
+  }),
   component: PlanningDetail,
 });
 

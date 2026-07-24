@@ -11,7 +11,18 @@ import { downloadMinutePdf } from "@/lib/pdf";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/meetings/")({
-  head: () => ({ meta: [{ title: "SAL Meetings — AC SAL Meetings" }] }),
+  head: () => ({
+    meta: [
+      { title: "SAL Meetings — AC SAL Meetings" },
+      { name: "description", content: "Archivio delle minute SAL per fornitore: seleziona un fornitore per consultare, modificare, esportare in PDF o eliminare le minute salvate." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "SAL Meetings — AC SAL Meetings" },
+      { property: "og:description", content: "Archivio delle minute SAL per fornitore con modifica, esportazione PDF ed eliminazione." },
+      { property: "og:url", content: "https://ac-salmeetings.lovable.app/meetings" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://ac-salmeetings.lovable.app/meetings" }],
+  }),
   component: MeetingsPage,
 });
 
@@ -63,6 +74,7 @@ function MeetingsPage() {
       </div>
 
       <Card className="p-5 mb-6">
+        <h2 className="sr-only">Filtro per fornitore</h2>
         <label className="text-sm font-medium mb-2 block">Fornitore</label>
         <Select value={supplierId} onValueChange={setSupplierId}>
           <SelectTrigger className="w-full md:w-96"><SelectValue placeholder={suppliers.length ? "Seleziona un fornitore" : "Nessun fornitore — aggiungili in Configurazione"} /></SelectTrigger>
@@ -80,6 +92,7 @@ function MeetingsPage() {
         <EmptyState icon={FileText} title="Nessuna minuta" desc={`Nessuna minuta per ${supplier?.name}. Creane una nuova.`} action={<Button onClick={() => navigate({ to: "/new-meeting" })}><Plus className="h-4 w-4 mr-2" />Nuova minuta</Button>} />
       ) : (
         <Card className="overflow-hidden">
+          <h2 className="sr-only">Elenco minute</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-background/40 text-xs uppercase tracking-wider text-muted-foreground">

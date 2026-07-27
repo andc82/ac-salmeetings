@@ -15,16 +15,23 @@ const search = z.object({ mode: z.enum(["view", "edit"]).optional().default("vie
 
 export const Route = createFileRoute("/_authenticated/meetings/$id")({
   validateSearch: search,
-  head: () => ({
-    meta: [
-      { title: "Minuta — AC SAL Meetings" },
-      { name: "description", content: "Visualizza, modifica o esporta in PDF una minuta SAL salvata nel portale AC SAL Meetings." },
-      { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Minuta — AC SAL Meetings" },
-      { property: "og:description", content: "Visualizza o modifica una minuta SAL con esportazione PDF." },
-      { property: "og:type", content: "article" },
-    ],
-  }),
+  head: ({ params }) => {
+    const shortId = params.id.slice(0, 8);
+    const title = `Minuta SAL ${shortId} — AC SAL Meetings`;
+    const description = `Minuta SAL ${shortId}: visualizza, modifica o esporta in PDF questo verbale di incontro con il fornitore nel portale AC SAL Meetings.`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { name: "robots", content: "noindex, nofollow" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: `https://ac-salmeetings.lovable.app/meetings/${params.id}` },
+      ],
+    };
+  },
+
   component: MeetingDetail,
 });
 

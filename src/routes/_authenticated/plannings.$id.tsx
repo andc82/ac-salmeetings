@@ -16,16 +16,23 @@ const search = z.object({ mode: z.enum(["view", "edit"]).optional().default("vie
 
 export const Route = createFileRoute("/_authenticated/plannings/$id")({
   validateSearch: search,
-  head: () => ({
-    meta: [
-      { title: "Pianificazione — AC SAL Meetings" },
-      { name: "description", content: "Visualizza o modifica una pianificazione con diagramma di Gantt: sviluppo, Q&A/UAT e rilascio in produzione per ogni progetto." },
-      { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Pianificazione — AC SAL Meetings" },
-      { property: "og:description", content: "Visualizza o modifica una pianificazione con Gantt." },
-      { property: "og:type", content: "article" },
-    ],
-  }),
+  head: ({ params }) => {
+    const shortId = params.id.slice(0, 8);
+    const title = `Pianificazione ${shortId} — AC SAL Meetings`;
+    const description = `Pianificazione ${shortId}: diagramma di Gantt con fasi di sviluppo, Q&A/UAT e rilascio in produzione per ogni progetto del fornitore.`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { name: "robots", content: "noindex, nofollow" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: `https://ac-salmeetings.lovable.app/plannings/${params.id}` },
+      ],
+    };
+  },
+
   component: PlanningDetail,
 });
 
